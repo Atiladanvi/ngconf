@@ -10,6 +10,22 @@
         "production": "mix --production"
     },
     "devDependencies": {
+        "clipboard": "^2.0.6",
+        "clone": "^2.1.2",
+        "do-bulma": "git+https://github.com/do-community/do-bulma.git",
+        "do-vue": "git+https://github.com/do-community/do-vue.git",
+        "escape-html": "^1.0.3",
+        "files-diff": "0.0.4",
+        "json-to-pretty-yaml": "^1.2.2",
+        "memory-tar-create": "0.0.2",
+        "pretty-checkbox-vue": "^1.1.9",
+        "prismjs": "^1.22.0",
+        "qs": "^6.9.4",
+        "simple-js-sha2-256": "^1.0.7",
+        "vue": "^2.6.12",
+        "vue-i18n": "^8.22.2",
+        "vue-select": "^3.10.8",
+        "webpack-require-from": "^1.8.2",
         "axios": "^0.21",
         "bootstrap": "^4.0.0",
         "jquery": "^3.2",
@@ -20,7 +36,7 @@
         "resolve-url-loader": "^2.3.1",
         "sass": "^1.20.1",
         "sass-loader": "^8.0.0",
-        "vue": "^2.5.17",
+        "vue-loader": "^15.9.6",
         "vue-template-compiler": "^2.6.10"
     }
 }

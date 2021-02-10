@@ -47,7 +47,7 @@ return [
 
     'logo' => env('APP_NAME', 'APP_NAME'),
     'logo_img' => 'img/brand_logo.png',
-    'logo_img_class' => 'brand-image img-circle elevation-3',
+    'logo_img_class' => 'brand-image elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
     'logo_img_alt' => env('APP_NAME', 'APP_NAME'),
@@ -238,19 +238,8 @@ return [
         ['header' => 'Modules'],
         [
             'text'    => 'Sites',
-            'icon'    => 'fas fa-fw fa-archive',
-            'submenu' => [
-                [
-                    'text' => 'list',
-                    'url'  => '/dashboard/sites',
-                    'icon' => false,
-                ],
-                [
-                    'text' => 'new',
-                    'url'  => '/dashboard/site/new',
-                    'icon' => false,
-                ],
-            ],
+            'icon'    => 'fas fa-fw fa-globe',
+            'url'         => '/dashboard/sites'
         ],
         [
             'text' => 'Users',

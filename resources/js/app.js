@@ -8,25 +8,49 @@ require('./bootstrap');
 
 window.Vue = require('vue').default;
 
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
+/*
+Copyright 2021 DigitalOcean
 
-// const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+This code is licensed under the MIT License.
+You may obtain a copy of the License at
+https://github.com/digitalocean/nginxconfig.io/blob/master/LICENSE or https://mit-license.org/
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions :
 
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
-const app = new Vue({
-    el: '#app',
-});
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+
+// Dynamic webpack import location (must be before app)
+const originalSrcDir = document.currentScript.src.split('/').slice(0, -1).join('/');
+(typeof global === 'undefined' ? window : global).__replaceWebpackDynamicImport = path => {
+    const base = path.split('/').pop();
+    console.log(`Modifying import ${path} to use dir ${originalSrcDir} and base ${base}`);
+    return `${originalSrcDir}/${base}`;
+};
+
+// Load in the app
+import '../sass/style.scss';
+import Vue from 'vue';
+import '../util/prism_bundle';
+import { i18n } from '../src/nginxconfig/i18n/setup';
+import App from '../src/nginxconfig/templates/app';
+
+// Run the app
+new Vue({
+    i18n,
+    render: h => h(App),
+}).$mount('#app');

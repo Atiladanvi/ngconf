@@ -25,6 +25,9 @@ Route::middleware([
         Route::get('/panel', [App\Http\Controllers\DashboardController::class, 'index'])
             ->name('dashboard');
 
+        Route::get('/sites', [App\Http\Controllers\SitesController::class, 'index'])
+            ->name('sites');
+
         Route::get('/user/create', [App\Http\Controllers\UserController::class, 'create'])
             ->name('user.create')
             ->middleware('can:create_user');
