@@ -2,10 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\CreateUser;
-use App\Models\User;
+use App\Actions\Fortify\CreateNewUser;
 use Illuminate\Console\Command;
-use Spatie\Permission\Models\Role;
 
 class SetupCommand extends Command
 {
@@ -50,9 +48,6 @@ class SetupCommand extends Command
             $this->setUpAdminAccount();
         }
 
-        $this->info("\nImport assets");
-        $this->call('adminlte:install', ['--only' => ['assets']]);
-
         $this->info('✅ Everything succeeded ✅');
     }
 
@@ -60,11 +55,13 @@ class SetupCommand extends Command
     {
         $this->info("Creating default admin account");
 
-        (new CreateUser())->create([
+        (new CreateNewUser())->create([
             'name' => self::DEFAULT_ADMIN_NAME,
             'email' => self::DEFAULT_ADMIN_EMAIL,
             'password' => self::DEFAULT_ADMIN_PASSWORD,
-        ],Role::findByName(User::$ADMIN));
+            'password_confirmation' => self::DEFAULT_ADMIN_PASSWORD,
+            'terms' => true,
+        ]);
 
         $this->comment(
             sprintf('Log in with email %s and password %s', self::DEFAULT_ADMIN_EMAIL, self::DEFAULT_ADMIN_PASSWORD)

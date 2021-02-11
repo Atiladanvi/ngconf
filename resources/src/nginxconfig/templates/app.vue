@@ -145,7 +145,7 @@ THE SOFTWARE.
     import NginxPrism from './prism/nginx';
 
     export default {
-        name: 'App',
+        name: 'SitesApp',
         components: {
             Header,
             VueSelect,

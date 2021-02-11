@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,40 +15,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Auth::routes(['register' => false]);
-
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('app');
+Route::get('/', function () {
+    return Inertia::render('Welcome', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
+});
 
 Route::middleware([
-    'web',
-    'auth'
+    'auth:sanctum',
+    'verified'
 ])->group(function () {
-    Route::prefix('dashboard')->group(function () {
-        Route::get('/panel', [App\Http\Controllers\DashboardController::class, 'index'])
-            ->name('dashboard');
-
-        Route::get('/sites', [App\Http\Controllers\SitesController::class, 'index'])
-            ->name('sites');
-
-        Route::get('/user/create', [App\Http\Controllers\UserController::class, 'create'])
-            ->name('user.create')
-            ->middleware('can:create_user');
-
-        Route::post('/user', [App\Http\Controllers\UserController::class, 'store'])
-            ->name('user.store')
-            ->middleware('can:create_user');
-
-        Route::get('/users', [App\Http\Controllers\UserController::class, 'index'])
-            ->name('user.index')
-            ->middleware('can:list_users');
-
-        Route::get('/user/{id}/edit', [App\Http\Controllers\UserController::class, 'edit'])
-            ->name('user.edit');
-
-        Route::delete('/user/{id}', [App\Http\Controllers\UserController::class, 'destroy'])
-            ->name('user.destroy');
-
-        Route::put('/user/{id}', [App\Http\Controllers\UserController::class, 'update'])
-            ->name('user.update');
-    });
+    Route::get('/dashboard', function (){
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
+    Route::get('/sites', function (){
+        return Inertia::render('Sites');
+    })->name('sites');
 });

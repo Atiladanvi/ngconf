@@ -1,38 +1,12 @@
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
 
 require('./bootstrap');
-
+import Vue from 'vue';
+import '../util/prism_bundle';
+import '../sass/style.scss';
 window.Vue = require('vue').default;
-
-/*
-Copyright 2021 DigitalOcean
-
-This code is licensed under the MIT License.
-You may obtain a copy of the License at
-https://github.com/digitalocean/nginxconfig.io/blob/master/LICENSE or https://mit-license.org/
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions :
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
+import { i18n } from '../src/nginxconfig/i18n/setup';
+import { App as InertiaApp, plugin as InertiaPlugin } from '@inertiajs/inertia-vue';
+import PortalVue from 'portal-vue';
 
 // Dynamic webpack import location (must be before app)
 const originalSrcDir = document.currentScript.src.split('/').slice(0, -1).join('/');
@@ -42,15 +16,21 @@ const originalSrcDir = document.currentScript.src.split('/').slice(0, -1).join('
     return `${originalSrcDir}/${base}`;
 };
 
-// Load in the app
-import '../sass/style.scss';
-import Vue from 'vue';
-import '../util/prism_bundle';
-import { i18n } from '../src/nginxconfig/i18n/setup';
-import App from '../src/nginxconfig/templates/app';
 
-// Run the app
+
+Vue.mixin({ methods: { route } });
+Vue.use(InertiaPlugin);
+Vue.use(PortalVue);
+
+const app = document.getElementById('app');
+
 new Vue({
     i18n,
-    render: h => h(App),
-}).$mount('#app');
+    render: (h) =>
+        h(InertiaApp, {
+            props: {
+                initialPage: JSON.parse(app.dataset.page),
+                resolveComponent: (name) => require(`./Pages/${name}`).default,
+            },
+        }),
+}).$mount(app);

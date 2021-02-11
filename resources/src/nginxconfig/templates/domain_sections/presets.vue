@@ -42,7 +42,8 @@ THE SOFTWARE.
 
             <div class="buttons-group">
                 <a v-for="(preset, key) in $props.data"
-                   :class="`button${preset.computed ? ' is-primary' : ''}`"
+                   :disabled="!preset.enabled"
+                   :class="`button${preset.computed ? ' is-primary ' : ''}`"
                    @click="setPreset(key)"
                 >
                     {{ $t(preset.display) }}
@@ -61,7 +62,7 @@ THE SOFTWARE.
         frontend: {
             default: false,
             display: 'templates.domainSections.presets.frontend', // i18n key
-            enabled: true,
+            enabled: false,
             computedCheck(data) {
                 return !data.php.php.computed
                     && !data.python.python.computed
@@ -88,7 +89,7 @@ THE SOFTWARE.
         django: {
             default: false,
             display: 'common.django', // i18n key
-            enabled: true,
+            enabled: false,
             computedCheck(data) {
                 return data.python.python.computed
                     && data.python.djangoRules.computed
@@ -98,7 +99,7 @@ THE SOFTWARE.
         nodejs: {
             default: false,
             display: 'templates.domainSections.presets.nodeJs', // i18n key
-            enabled: true,
+            enabled: false,
             computedCheck(data) {
                 return data.reverseProxy.reverseProxy.computed
                     && !data.routing.root.computed;
@@ -107,7 +108,7 @@ THE SOFTWARE.
         singlePageApplication: {
             default: false,
             display: 'templates.domainSections.presets.singlePageApplication', // i18n key
-            enabled: true,
+            enabled: false,
             computedCheck(data) {
                 return data.php.php.computed
                     && data.routing.index.computed === 'index.html'
@@ -117,7 +118,7 @@ THE SOFTWARE.
         wordPress: {
             default: false,
             display: 'common.wordPress', // i18n key
-            enabled: true,
+            enabled: false,
             computedCheck(data) {
                 return data.routing.index.computed === 'index.php'
                     && data.routing.fallbackPhp.computed
@@ -131,7 +132,7 @@ THE SOFTWARE.
         drupal: {
             default: false,
             display: 'common.drupal', // i18n key
-            enabled: true,
+            enabled: false,
             computedCheck(data) {
                 return data.routing.index.computed === 'index.php'
                     && data.routing.fallbackPhp.computed
@@ -145,7 +146,7 @@ THE SOFTWARE.
         magento: {
             default: false,
             display: 'common.magento', // i18n key
-            enabled: true,
+            enabled: false,
             computedCheck(data) {
                 return data.routing.index.computed === 'index.php'
                     && data.routing.fallbackPhp.computed
@@ -159,7 +160,7 @@ THE SOFTWARE.
         joomla: {
             default: false,
             display: 'common.joomla', // i18n key
-            enabled: true,
+            enabled: false,
             computedCheck(data) {
                 return data.routing.index.computed === 'index.php'
                     && data.routing.fallbackPhp.computed
