@@ -33,14 +33,32 @@ Route::middleware([
     })->name('dashboard');
 
     Route::get('/sites', [ \App\Http\Controllers\SitesController::class , 'index'])
-        ->name('sites');
+        ->name('sites.index');
 
     Route::put('/site/{id}', [ \App\Http\Controllers\SitesController::class , 'update'])
-        ->name('site.update');
+        ->name('sites.update');
 
     Route::delete('/site/{id}', [ \App\Http\Controllers\SitesController::class , 'destroy'])
-        ->name('site.destroy');
+        ->name('sites.destroy');
 
     Route::post('/site', [ \App\Http\Controllers\SitesController::class , 'store'])
-        ->name('site.store');
+        ->name('sites.store');
+
+    Route::get('/server/create', [\App\Http\Controllers\ServerController::class, 'create'])
+        ->name('servers.create');
+
+    Route::post('/server', [\App\Http\Controllers\ServerController::class, 'store'])
+        ->name('servers.store');
+
+    Route::get('/server/{id}', [\App\Http\Controllers\ServerController::class, 'edit'])
+        ->name('servers.edit');
+
+    Route::put('/server/{id}', [\App\Http\Controllers\ServerController::class, 'update'])
+        ->name('servers.update');
+
+    Route::delete('/server/{id}', [\App\Http\Controllers\ServerController::class, 'destroy'])
+        ->name('servers.destroy');
+
+    Route::put('/current-server', [\App\Http\Controllers\CurrentServerController::class, 'update'])
+        ->name('current-server.update');
 });

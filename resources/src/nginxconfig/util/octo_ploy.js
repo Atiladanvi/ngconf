@@ -60,7 +60,7 @@ export default {
             let self = this;
             this.loadForm();
             if (this.siteStored(this.$data.domains[this.active])){
-                this.form.put(route('site.update', this.$data.domains[this.active]._id), {
+                this.form.put(route('sites.update', this.$data.domains[this.active]._id), {
                     errorBag: 'updateSite',
                     preserveScroll: true,
                     onSuccess: function () {
@@ -69,7 +69,7 @@ export default {
                 });
             }else{
                 let self = this
-                this.form.post(route('site.store'), {
+                this.form.post(route('sites.store'), {
                     errorBag: 'storeSite',
                     preserveScroll: true,
                     onSuccess: function () {
@@ -86,7 +86,7 @@ export default {
             let self = this;
             this.loadForm(this.indexSiteToDelete);
             this.confirmingSiteDeletion = false;
-            this.form.delete(route('site.destroy', this.$data.domains[this.indexSiteToDelete]._id), {
+            this.form.delete(route('sites.destroy', this.$data.domains[this.indexSiteToDelete]._id), {
                 errorBag: 'deleteSite',
                 preserveScroll: true,
                 onSuccess: function () {

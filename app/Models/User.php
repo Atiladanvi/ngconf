@@ -8,22 +8,20 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
-use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
-use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto;
-    use HasTeams;
-    use HasRoles;
     use Notifiable;
     use TwoFactorAuthenticatable;
 
     protected $fillable = [
-        'name', 'email', 'password',
+        'name',
+        'email',
+        'password',
     ];
 
     protected $hidden = [
@@ -40,9 +38,4 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
-
-    public function getRoleAttribute()
-    {
-        return $this->roles->first()->name ?? null;
-    }
 }
