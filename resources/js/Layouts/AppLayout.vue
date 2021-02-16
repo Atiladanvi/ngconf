@@ -228,7 +228,17 @@
 
             <!-- Page Content -->
             <main>
-                <slot></slot>
+
+                <transition name="fade">
+                    <div v-if="loading" class="centered">
+                        <rotate-square3 color="#0e68fa"></rotate-square3>
+                    </div>
+                </transition>
+
+                <div :style="[ loading ? { opacity: 0.5, 'pointer-events' : 'none' } : { } ]">
+                    <slot></slot>
+                </div>
+
             </main>
 
             <!-- Modal Portal -->
@@ -246,6 +256,14 @@
     import JetNavLink from '@/Jetstream/NavLink'
     import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink'
 
+    import { InertiaProgress } from '@inertiajs/progress'
+    import { RotateSquare3 } from 'vue-loading-spinner'
+    import { Inertia } from '@inertiajs/inertia'
+
+    InertiaProgress.init({
+        delay: 250
+    })
+
     export default {
         components: {
             JetApplicationMark,
@@ -254,11 +272,13 @@
             JetDropdownLink,
             JetNavLink,
             JetResponsiveNavLink,
+            RotateSquare3
         },
 
         data() {
             return {
                 showingNavigationDropdown: false,
+                loading: false
             }
         },
 
@@ -274,6 +294,32 @@
             logout() {
                 this.$inertia.post(route('logout'));
             },
+        },
+        mounted() {
+            let self = this
+            Inertia.on('start', () => {
+                self.loading = true
+            })
+            Inertia.on('finish', () => {
+                self.loading = false
+            })
         }
     }
 </script>
+
+<style>
+
+.centered {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 100;
+}
+.fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+}
+
+</style>

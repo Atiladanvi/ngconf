@@ -32,4 +32,7 @@ import globalSections from './global_sections';
 import setupSections from './setup_sections';
 import callouts from './callouts';
 
-export default { app, setup, footer, domainSections, globalSections, setupSections, callouts };
+/// [octo-ploy]
+import octoPloy from './octo_ploy';
+
+export default { app, setup, footer, domainSections, globalSections, setupSections, callouts, octoPloy };

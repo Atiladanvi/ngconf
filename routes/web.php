@@ -31,7 +31,16 @@ Route::middleware([
     Route::get('/dashboard', function (){
         return Inertia::render('Dashboard');
     })->name('dashboard');
-    Route::get('/sites', function (){
-        return Inertia::render('Sites');
-    })->name('sites');
+
+    Route::get('/sites', [ \App\Http\Controllers\SitesController::class , 'index'])
+        ->name('sites');
+
+    Route::put('/site/{id}', [ \App\Http\Controllers\SitesController::class , 'update'])
+        ->name('site.update');
+
+    Route::delete('/site/{id}', [ \App\Http\Controllers\SitesController::class , 'destroy'])
+        ->name('site.destroy');
+
+    Route::post('/site', [ \App\Http\Controllers\SitesController::class , 'store'])
+        ->name('site.store');
 });

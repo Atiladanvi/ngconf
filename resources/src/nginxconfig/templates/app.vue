@@ -26,7 +26,34 @@ THE SOFTWARE.
 
 <template>
     <div class="all do-bulma">
-        <Header :title="$t('templates.app.title')">
+
+        <!-- OctoPloy -->
+        <jet-confirmation-modal :show="confirmingSiteDeletion" @close="confirmingSiteDeletion = false">
+            <template #title>
+                {{ $t('templates.octoPloy.deleteSite') }}
+            </template>
+
+            <template #description>
+                {{ $t('templates.octoPloy.permanentlyDeleteThisSite') }}
+            </template>
+
+            <template #content>
+                {{ $t('templates.octoPloy.areYouSureYouWantToDeleteThisSiteOnceATeamIsDeletedAllOfItsResourcesAndDataWillBePermanentlyDeleted') }}
+            </template>
+
+            <template #footer>
+                <jet-secondary-button @click.native="confirmingSiteDeletion = false">
+                    {{ $t('templates.octoPloy.nevermind') }}
+                </jet-secondary-button>
+
+                <jet-danger-button class="ml-2" @click.native="reallySiteDelete = true" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    {{ $t('templates.octoPloy.deleteSite') }}
+                </jet-danger-button>
+            </template>
+        </jet-confirmation-modal>
+        <!-- OctoPloy -->
+
+        <Header v-show="sectionsVisibles.header" :title="$t('templates.app.title')">
             <template #description>
                 {{ $t('templates.app.description') }}
             </template>
@@ -59,9 +86,28 @@ THE SOFTWARE.
         <div class="main container" :style="{ display: ready ? undefined : 'none' }">
             <div class="columns is-multiline">
                 <div :class="`column ${splitColumn ? 'is-half' : 'is-full'} is-full-touch`">
-                    <h2>{{ $t('templates.app.perWebsiteConfig') }}</h2>
 
-                    <div class="tabs">
+                    <!-- OctoPloy -->
+                    <div v-show="sectionsVisibles.sitesSettings" v-if="domains[active]" class="header pt-5">
+                        <div class="container">
+                            <form>
+                                <div class="buttons">
+                                    <a
+                                        v-if="domains.length"
+                                        :disabled="form.processing || (!changes(active) && siteStored(domains[active])) || domains.length === 0"
+                                        :class="[(domains[active]) && siteStored(domains[active]) ? '' : 'is-outline']"
+                                        @click="saveSite()"
+                                        class="button is-primary"
+                                    >
+                                        {{(domains[active]) && siteStored(domains[active]) ? $t('templates.octoPloy.syncConfig') + changes(active) : $t('templates.octoPloy.upConfig') }}
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- OctoPloy -->
+
+                    <div v-show="sectionsVisibles.sitesSettings" class="tabs">
                         <ul>
                             <li v-for="data in activeDomains" :class="data[1] === active ? 'is-active' : undefined">
                                 <a class="domain" @click="active = data[1]">
@@ -77,23 +123,23 @@ THE SOFTWARE.
                         </ul>
                     </div>
 
-                    <template v-for="data in activeDomains">
+                    <template  v-show="sectionsVisibles.sitesSettings" v-for="data in activeDomains">
                         <Domain :key="data[1]"
                                 :data="data[0]"
                                 :style="{ display: data[1] === active ? undefined : 'none' }"
                         ></Domain>
                     </template>
 
-                    <h2>{{ $t('templates.app.globalConfig') }}</h2>
-                    <Global :data="global"></Global>
+                    <h2 v-show="sectionsVisibles.globalSettings" >{{ $t('templates.app.globalConfig') }}</h2>
+                    <Global  v-show="sectionsVisibles.globalSettings"  :data="global"></Global>
 
-                    <DropletCallout></DropletCallout>
+                    <DropletCallout v-show="sectionsVisibles.calloutDigitalOcean"></DropletCallout>
 
-                    <h2>{{ $t('templates.app.setup') }}</h2>
-                    <Setup :data="{ domains: domains.filter(d => d !== null), global, confFiles }"></Setup>
+                    <h2 v-show="sectionsVisibles.configurationSteps">{{ $t('templates.app.setup') }}</h2>
+                    <Setup v-show="sectionsVisibles.configurationSteps" :data="{ domains: domains.filter(d => d !== null), global, confFiles }"></Setup>
                 </div>
 
-                <div :class="`column ${splitColumn ? 'is-half' : 'is-full'} is-full-touch`">
+                <div v-show="sectionsVisibles.nginxFiles" :class="`column ${splitColumn ? 'is-half' : 'is-full'} is-full-touch`">
                     <h2>{{ $t('templates.app.configFiles') }}</h2>
                     <div ref="files" class="columns is-multiline files">
                         <template v-for="confContents in confFilesOutput">
@@ -111,7 +157,7 @@ THE SOFTWARE.
             </div>
         </div>
 
-        <Footer></Footer>
+        <Footer v-show="sectionsVisibles.digitalOceanFooter"></Footer>
         <ContributeCallout></ContributeCallout>
     </div>
 </template>
@@ -124,6 +170,13 @@ THE SOFTWARE.
     import Header from 'do-vue/src/templates/header';
     import diff from 'files-diff';
 
+    /// [octo-ploy]
+    import OctoPloyMixim from '../util/octo_ploy';
+    import JetActionSection from '@/Jetstream/ActionSection';
+    import JetConfirmationModal from '@/Jetstream/ConfirmationModal';
+    import JetDangerButton from '@/Jetstream/DangerButton';
+    import JetSecondaryButton from '@/Jetstream/SecondaryButton';
+    /// [octo-ploy]
     import isChanged from '../util/is_changed';
     import importData from '../util/import_data';
     import isObject from '../util/is_object';
@@ -158,7 +211,17 @@ THE SOFTWARE.
             NginxPrism,
             YamlPrism: () => import('./prism/yaml'),
             DockerPrism: () => import('./prism/docker'),
+        /// [octo-ploy]
+            JetActionSection,
+            JetConfirmationModal,
+            JetDangerButton,
+            JetSecondaryButton,
         },
+        props: {
+          sites: Array
+        },
+        mixins: [ OctoPloyMixim ],
+        /// [octo-ploy]
         data() {
             return {
                 domains: [],
@@ -261,6 +324,11 @@ THE SOFTWARE.
             const query = window.location.search || window.location.hash.slice(1);
             const imported = await importData(query, this.$data.domains, this.$data.global, this.$nextTick);
 
+            /// [octo-ploy]
+            // Sync data from server
+            this.syncSites('mounted');
+            /// [octo-ploy]
+
             // Apply browser language if not specified in query
             if (!imported || !imported.global || !imported.global.app || !imported.global.app.lang) {
                 const language = browserLanguage(availablePacks);
@@ -302,14 +370,25 @@ THE SOFTWARE.
                 // Analytics
                 this.addSiteEvent(this.activeDomains.length);
             },
+            /// [octo-ploy]
             remove(index) {
+                if (this.$data.domains[index]){
+                    if(this.siteStored(this.$data.domains[index])){
+                        this.confirmSiteDeletion(index);
+                    }else{
+                        this.reallyRemove(index);
+                    }
+                }
+            },
+            /// [octo-ploy]
+            reallyRemove(index){
                 const name = this.$data.domains[index].server.domain.computed;
                 this.$set(this.$data.domains, index, null);
                 if (this.$data.active === index) this.$data.active = this.$data.domains.findIndex(d => d !== null);
-
                 // Analytics
                 this.removeSiteEvent(this.activeDomains.length, name);
             },
+            /// [octo-ploy]
             checkChange(oldConf) {
                 // If nothing has changed for a tick, we can use the config files
                 if (oldConf === this.confFiles) {

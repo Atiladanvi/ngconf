@@ -33,6 +33,8 @@ return [
     |
     */
 
+    'mongo_connection' => env('DB_MONGO_CONNECTION'),
+
     'connections' => [
 
         'sqlite' => [
@@ -105,6 +107,27 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
         ],
+
+        'mongodb' => [
+            'driver' => 'mongodb',
+            'host' => env('DB_MONGO_HOST', '127.0.0.1'),
+            'port' => env('DB_MONGO_PORT', 27017),
+            'database' => env('DB_MONGO_DATABASE', 'homestead'),
+            'username' => env('DB_MONGO_USERNAME', 'homestead'),
+            'password' => env('DB_MONGO_PASSWORD', 'secret'),
+            'options' => [
+                // here you can pass more settings to the Mongo Driver Manager
+                // see https://www.php.net/manual/en/mongodb-driver-manager.construct.php under "Uri Options" for a list of complete parameters that you can use
+
+                'database' => env('DB_MONGO_AUTHENTICATION_DATABASE', 'admin'), // required with Mongo 3+
+            ],
+        ],
+
+        'atlas' => [
+            'driver' => 'mongodb',
+            'dsn'=> env('DB_MONGO_DSN', null),
+            'database' => env('DB_MONGO_DATABASE', 'homestead'),
+        ]
 
     ],
 
