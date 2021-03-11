@@ -131,7 +131,7 @@ THE SOFTWARE.
                     </template>
 
                     <h2 v-show="sectionsVisibles.globalSettings" >{{ $t('templates.app.globalConfig') }}</h2>
-                    <Global  v-show="sectionsVisibles.globalSettings"  :data="global"></Global>
+                    <Global  v-show="sectionsVisibles.globalSettings" :data="global"></Global>
 
                     <DropletCallout v-show="sectionsVisibles.calloutDigitalOcean"></DropletCallout>
 

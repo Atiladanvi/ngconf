@@ -7,13 +7,14 @@ export default {
         return {
             confirmingSiteDeletion: false,
             indexSiteToDelete: null,
+            exampleSite: {},
             sectionsVisibles: {
                 header: false,
                 sitesSettings: true,
-                globalSettings: false,
+                globalSettings: true,
                 calloutDigitalOcean: false,
                 configurationSteps: false,
-                nginxFiles: false,
+                nginxFiles: true,
                 digitalOceanFooter: false
             },
             form: {}
@@ -41,7 +42,7 @@ export default {
            return false;
         },
         syncSites(action = null) {
-            let presets = this.$data.domains[0].presets;
+            let presets = this.exampleSite.presets;
             this.sites.map((site) => {
                 let keys = Object.keys(site.presets);
                 keys.map((preset) => {
