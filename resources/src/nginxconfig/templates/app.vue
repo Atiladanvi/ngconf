@@ -26,34 +26,7 @@ THE SOFTWARE.
 
 <template>
     <div class="all do-bulma">
-
-        <!-- OctoPloy -->
-        <jet-confirmation-modal :show="confirmingSiteDeletion" @close="confirmingSiteDeletion = false">
-            <template #title>
-                {{ $t('templates.octoPloy.deleteSite') }}
-            </template>
-
-            <template #description>
-                {{ $t('templates.octoPloy.permanentlyDeleteThisSite') }}
-            </template>
-
-            <template #content>
-                {{ $t('templates.octoPloy.areYouSureYouWantToDeleteThisSiteOnceATeamIsDeletedAllOfItsResourcesAndDataWillBePermanentlyDeleted') }}
-            </template>
-
-            <template #footer>
-                <jet-secondary-button @click.native="confirmingSiteDeletion = false">
-                    {{ $t('templates.octoPloy.nevermind') }}
-                </jet-secondary-button>
-
-                <jet-danger-button class="ml-2" @click.native="reallySiteDelete = true" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    {{ $t('templates.octoPloy.deleteSite') }}
-                </jet-danger-button>
-            </template>
-        </jet-confirmation-modal>
-        <!-- OctoPloy -->
-
-        <Header v-show="sectionsVisibles.header" :title="$t('templates.app.title')">
+        <Header :title="$t('templates.app.title')">
             <template #description>
                 {{ $t('templates.app.description') }}
             </template>
@@ -86,9 +59,10 @@ THE SOFTWARE.
         <div class="main container" :style="{ display: ready ? undefined : 'none' }">
             <div class="columns is-multiline">
                 <div :class="`column ${splitColumn ? 'is-half' : 'is-full'} is-full-touch`">
+                    <h2>{{ $t('templates.app.perWebsiteConfig') }}</h2>
 
                     <!-- OctoPloy -->
-                    <div v-show="sectionsVisibles.sitesSettings" v-if="domains[active]" class="header pt-5">
+                    <div v-if="domains[active]" class="header pt-5">
                         <div class="container">
                             <form>
                                 <div class="buttons">
@@ -107,7 +81,7 @@ THE SOFTWARE.
                     </div>
                     <!-- OctoPloy -->
 
-                    <div v-show="sectionsVisibles.sitesSettings" class="tabs">
+                    <div class="tabs">
                         <ul>
                             <li v-for="data in activeDomains" :class="data[1] === active ? 'is-active' : undefined">
                                 <a class="domain" @click="active = data[1]">
@@ -123,23 +97,23 @@ THE SOFTWARE.
                         </ul>
                     </div>
 
-                    <template  v-show="sectionsVisibles.sitesSettings" v-for="data in activeDomains">
+                    <template v-for="data in activeDomains">
                         <Domain :key="data[1]"
                                 :data="data[0]"
                                 :style="{ display: data[1] === active ? undefined : 'none' }"
                         ></Domain>
                     </template>
 
-                    <h2 v-show="sectionsVisibles.globalSettings" >{{ $t('templates.app.globalConfig') }}</h2>
-                    <Global  v-show="sectionsVisibles.globalSettings" :data="global"></Global>
+                    <h2>{{ $t('templates.app.globalConfig') }}</h2>
+                    <Global :data="global"></Global>
 
-                    <DropletCallout v-show="sectionsVisibles.calloutDigitalOcean"></DropletCallout>
+                    <DropletCallout></DropletCallout>
 
-                    <h2 v-show="sectionsVisibles.configurationSteps">{{ $t('templates.app.setup') }}</h2>
-                    <Setup v-show="sectionsVisibles.configurationSteps" :data="{ domains: domains.filter(d => d !== null), global, confFiles }"></Setup>
+                    <h2>{{ $t('templates.app.setup') }}</h2>
+                    <Setup :data="{ domains: domains.filter(d => d !== null), global, confFiles }"></Setup>
                 </div>
 
-                <div v-show="sectionsVisibles.nginxFiles" :class="`column ${splitColumn ? 'is-half' : 'is-full'} is-full-touch`">
+                <div :class="`column ${splitColumn ? 'is-half' : 'is-full'} is-full-touch`">
                     <h2>{{ $t('templates.app.configFiles') }}</h2>
                     <div ref="files" class="columns is-multiline files">
                         <template v-for="confContents in confFilesOutput">
@@ -157,7 +131,7 @@ THE SOFTWARE.
             </div>
         </div>
 
-        <Footer v-show="sectionsVisibles.digitalOceanFooter"></Footer>
+        <Footer></Footer>
         <ContributeCallout></ContributeCallout>
     </div>
 </template>
@@ -198,7 +172,7 @@ THE SOFTWARE.
     import NginxPrism from './prism/nginx';
 
     export default {
-        name: 'SitesApp',
+        name: 'App',
         components: {
             Header,
             VueSelect,
@@ -323,11 +297,6 @@ THE SOFTWARE.
             // The config file watcher will handle setting the app as ready
             const query = window.location.search || window.location.hash.slice(1);
             const imported = await importData(query, this.$data.domains, this.$data.global, this.$nextTick);
-
-            /// [octo-ploy]
-            // Sync data from server
-            this.syncSites('mounted');
-            /// [octo-ploy]
 
             // Apply browser language if not specified in query
             if (!imported || !imported.global || !imported.global.app || !imported.global.app.lang) {

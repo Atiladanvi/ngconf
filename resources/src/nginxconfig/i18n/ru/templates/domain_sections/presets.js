@@ -24,22 +24,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-import common from '../../common';
-
 export default {
-    phpServer: `Servidor ${common.php}`,
-    phpMustBeEnabledOnOneSite: `O ${common.php} deve estar habilitado em pelo menos um site para definir as configurações globais do ${common.php}.`,
-    phpBackupServer: `Servidor de backup ${common.php}`,
-    tcp: 'TCP',
-    hhvmSocket: 'Socket HHVM',
-    php5Socket: 'Socket 5.x',
-    php70Socket: 'Socket 7.0',
-    php71Socket: 'Socket 7.1',
-    php72Socket: 'Socket 7.2',
-    php73Socket: 'Socket 7.3',
-    php74Socket: 'Socket 7.4',
-    php80Socket: 'Socket 8.0',
-    phpSocket: 'Socket PHP',
-    custom: 'Custom', // TODO: translate
-    disabled: 'Desabilitado',
+    presets: 'Пресеты',
+    itLooksLikeYouCustomisedTheConfig: 'Похоже, вы уже настроили конфигурацию для этого домена. Выбор нового пресета может привести к сбросу или изменению некоторых настроек, которые Вы настроили ранее.',
+    frontend: 'Фронтэнд',
+    nodeJs: 'Node.js',
+    singlePageApplication: 'Одностраничное приложение',
 };

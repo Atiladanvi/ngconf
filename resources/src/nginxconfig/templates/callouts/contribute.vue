@@ -34,7 +34,7 @@ THE SOFTWARE.
                 <i class="fas fa-times"></i>
             </a>
         </div>
-        <a href="https://github.com/a2insights/hostby-panel"
+        <a href="https://github.com/digitalocean/nginxconfig.io"
            class="button is-primary"
            target="_blank"
            @click="linkClickEvent"
@@ -52,7 +52,7 @@ THE SOFTWARE.
         data() {
             return {
                 scrolled: false,
-                closed: true,
+                closed: false,
             };
         },
         computed: {
